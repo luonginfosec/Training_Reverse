@@ -8,7 +8,7 @@
 
 ### Nguyên lí hoạt động
 
-![alt text](RC4.png)
+![alt text](./WEEK1/RC4.png)
 
 - RC4 hoạt động dựa trên nguyên tắc phát sinh **chuỗi khóa (keystream)** và thực hiện phép **XOR** với **dữ liệu gốc (plaintext)** để tạo ra **dữ liệu mã hóa (ciphertext)**.
 - Quá trình mã hóa và giải mã của RC4 hoàn toàn giống nhau, chỉ cần thực hiện XOR với cùng một keystream.
@@ -62,7 +62,7 @@
 
 ### Code minh họa
 
-[Source code ở đây](RC4.py)
+[Source code ở đây](./WEEK1/RC4.py)
 ```Python
 def KSA(key):
     S = list(range(256))
@@ -108,7 +108,7 @@ if __name__ == "__main__":
     output_result(ciphertext, decrypted)
 ```
 
-[Source code ở đây](RC4.c)
+[Source code ở đây](./WEEK1/RC4.c)
 ```C
 #include <stdio.h>
 #include <string.h>
@@ -192,7 +192,7 @@ Code thuật toán mã hóa RC4 bằng asm x86
 - Không dùng bất cứ thư viện có sẵn nào, kiểu invoke, hay printf, hay scan, tất cả chỉ được dùng WinAPI, Call WriteConsole call ReadConsole truyền tham số bằng push stack, atoi, itoa tất cả code chay
 ```
     
-
+[Source code ở đây](./WEEK1/asm.asm)
 ```asm
 .386	; Chỉ định sử dụng bộ xử lí Intel 80386 trở lên
 .model flat, stdcall	; Mô hình bộ nhớ phẳng và quy ước gọi hàm stdcall

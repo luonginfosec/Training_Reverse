@@ -468,3 +468,8 @@ showOutput ENDP             ; Kết thúc thủ tục showOutput
 END main 
 ```
 
+# Tài liệu tham khảo
+
+- [Video hướng dẫn trên YouTube về ASM X86](https://www.youtube.com/watch?v=vWlAg-pwMsM&list=PLan2CeTAw3pFOq5qc9urw8w7R-kvAT8Yb)
+- [Video hướng dẫn trên YouTube về ASM X86](https://www.youtube.com/watch?v=75gBFiFtAb8)
+- [Link HackMD](https://hackmd.io/@Zupp/Task1)

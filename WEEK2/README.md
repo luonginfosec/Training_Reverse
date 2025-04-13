@@ -1,4 +1,121 @@
 # Tuần 2
+## Code Helloworld sử dụng PEB để resolve API.
+ 
+### Giới thiệu tổng quan resolve API
+
+Thông thường các chương trình code C/ASM sử dụng các API Windows bằng cách gọi các hàm từ các thư viện như kernel32.dll, user32.dll. ntdll.dll. 
+Resolve API là việc:
+  - Tự tìm địa chỉ hàm trong bộ nhớ và thực thi.
+  - Thường được dùng trong malware để tránh bị phân tích.
+  - Một trong những cách thức resolve API là sử dụng PEB, PEB là cấu trúc dữ liệu trong bộ nhớ chứa thông tin về môi trường của tiến trình, các thông tin về DLL đã được tải và địa chỉ của chúng.
+  - Phương pháp: Một trong các cách tiếp cận phổ biến là lấy địa chỉ của PEB từ TEB (Thread Environment Block), sau đó tìm bảng Ldr trong PEB, tiếp theo là bảng InMemoryOrderModuleList chứa danh sách các DLL đã được nạp vào bộ nhớ. Sau khi xác định được các DLL, ta có thể tra cứu các API thông qua các bảng Export của DLL đó.
+Quá trình cơ bản có thể được mô tả như sau:
+
+- **TEB** (Thread Environment Block)  
+  *Mỗi thread đều có một TEB*  
+  - **PEB** (Process Environment Block)  
+    `FS:[0x30]` trên x86, `GS:[0x60]` trên x64  
+    - **Ldr** (`PEB_LDR_DATA`)  
+      *Cấu trúc mô tả các DLL được load*  
+      - **InMemoryOrderModuleList**  
+        *Danh sách liên kết các module theo thứ tự load*  
+        - **LDR_DATA_TABLE_ENTRY**  
+          *Mỗi entry tương ứng với 1 DLL (vd: kernel32.dll)*  
+          - **DllBase**  
+            *Địa chỉ base của DLL trong memory (ImageBase)*  
+            - `+0x3C` → **PE Header**  
+              *`e_lfanew` – offset đến PE header*  
+              - **Optional Header**
+                - **Data Directory**
+                  - **Export Table** (`IMAGE_EXPORT_DIRECTORY`)
+                    - `AddressOfFunctions[]`  
+                      *Mảng chứa RVA của các hàm*  
+                    - `AddressOfNames[]`  
+                      *Mảng chứa RVA tên hàm (string)*  
+                    - `AddressOfNameOrdinals[]`  
+                      *Mảng chứa index đến `AddressOfFunctions`*
+
+
+### Từ TEB đến PEB
+
+TEB là cấu trúc lưu thông tin về từng thread (luồng hiện đang chạy).  
+[Link nguồn](https://learn.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-teb)
+![alt text](TEB.png)
+
+TEB chứa một con trỏ tới PEB.
+
+![alt text](PEB_1.png)
+
+Trên Windows 32-bit (x86)
+- Thanh ghi FS chứa TEB
+- PEB nằm tại offset 0x30 trong TEB
+
+
+Trên Windows 64-bit (x64)
+- Thanh ghi GS chứa TEB
+- PEB nằm tại offset 0x60 trong TEB
+
+Trong bài này em sẽ trình bày trên Windows-32bit (x86)
+Mỗi thread sẽ có một cấu trục TEB riêng. Địa chỉ của cấu trúc TEB được lưu trong thanh ghi FS. Trong cấu trúc này chúng ta quan tâm đến trường ProcessEnvironmentBlock. Đây là con trỏ đến cấu trúc Process Environment Block (PEB). Mỗi process (tiến trình) cũng sẽ có một cấu trúc PEB riêng để lưu thông tin về process. Con trỏ đến PEB có offset 0x30 trong cấu trúc TEB. Dưới đây là cấu trúc PEB:
+[Link nguồn](https://learn.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb)
+![alt text](PEB.png)
+
+Trong PEB, chúng ta lại quan tâm đến trường Ldr, đây là con trỏ trỏ đến cấu trúc PEB_LDR_DATA cấu trúc này chứa thông tin về dll đã được tải vào bộ nhớ, nằm tại offset 0x0c trong PEB:
+[Link nguồn](https://learn.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb_ldr_data)
+![alt text](Ldr.png)
+Trong cấu trúc này chứa một trường quan trọng là InMemoryOrderModuleList (nằm tại offset 0x14 trong PEB_LDR_DATA) trỏ đến cấu trúc LDR_DATA_TABLE_ENTRY, trường này chứa danh sách các dll theo thứ tự trong vùng nhớ
+
+Cấu trúc LIST_ENTRY là một danh sách liên kết đôi trỏ đến phần tử trước và sau.
+
+![alt text](LIST_ENTRY.png)
+
+Cấu trúc LDR_TABLE_ENTRY chứa thông tin về dll đã được load. Trong đó, có một số quan trọng cần chú ý là InMemoryOrderLinks(trỏ tới LIST_ENTRY), DllBase(Địa chỉ của Dll), FullDllName(Tên của Dll ) 
+
+![alt text](LDR_DATA_TABLE_ENTRY.png)
+
+Ví dụ sơ đồ tóm tắt quả trình kernel32.dll
+
+![alt text](Ex.png)
+
+Quá trình này chính là lấy base address của kernel32.dll. Xong bước này chúng ta sẽ đến với Parse PE Header để tìm Export Table.
+
+### PARSE PE HEADER → LẤY EXPORT TABLE
+
+[Tài liệu tìm hiểu về PE file một cách tổng quát khá chi tiết đầy đủ](https://hackmd.io/@Wh04m1/r1Pzr-M96)
+
+Tìm RVA của PE Header.
+
+RVA (Relative Virtual Address) : RVA là địa chỉ ảo tương đối, tính từ điểm bắt đầu của module (DLL hoặc EXE) khi nó được nạp vào bộ nhớ. 
+Từ địa chỉ DllBase dùng e_lfanew tại offset +0x3c để tìm đến PE Header đây là RVA của PE Header, cộng thêm với địa chỉ cơ sở kernel32 base là chúng ta sẽ thu được địa thực tế của PE Header.
+![alt text](PE_HEADER.png)
+Từ RVA của PE Header + 78h là chúng ta sẽ đến với RVA của Export Dictionary/Table. Chúng ta lại tính địa chỉ thực tế bằng cách cộng địa chỉ cơ sở của kernel32.dll là xong.
+
+Ví dụ ở đây của em đang là 0xB8 thì RVA Export Directory sẽ có là 0xB8 + 0x78 = 0x130
+![alt text](Export_Directory_RVA.png)
+
+Cấu trúc Export Dictionary mô tả minh họa như hình: 
+![alt text](IMAGE_EXPORT_DIRECTORY.png)
+
+Từ đó chúng ta sẽ lấy các thông tin lấy số lượng hàm xuất tại địa chỉ thực tế ExportTable + 0x14 là ra số lượng hàm xuất của kernel32.dll. 
+
+Lấy RVA của bảng địa chỉ hàm tại AddressOfFunctions:
+Tại địa chỉ thực tế của ExportTable + 0x1c là ra được địa chỉ thực tế của bảng địa chỉ hàm.
+
+Lấy RVA của bảng tên hàm tại AddressOfNames:
+Tại địa chỉ thực tế của ExportTable + 0x20 là ra được địa chỉ thực tế của bảng tên hàm.
+
+Lấy RVA của bảng thứ tự tên tại AddressOfOrdinals:
+Tại địa chỉ thực tế của ExportTable + 0x24 là ra được địa chỉ thực tế của bảng thứ tự tên.
+
+Sau khi có các bảng này chúng ta sẽ tiến hành tìm kiếm theo tên và trả về được địa chỉ hàm mà chúng ta mong muốn.
+
+Bằng cách duyệt so sánh tên chúng ta sẽ có thứ tự của hàm rồi sao đó tìm lại được RVA và cuối cùng là địa chỉ thật của hàm đó.
+
+Lưu ý bảng địa chỉ mỗi cái cách 4 bytes còn bảng thứ tự thì cách 2 bytes dùng để tính RVA cho chuẩn.
+![alt text](DIS.png)
+
+
+
 ```ASM
 .386 ; Chỉ định sử dụng bộ xử lí Intel 80386 trở lên
 .model flat, stdcall ; Mô hình bộ nhớ phẳng và quy ước gọi hàm stdcall
@@ -97,7 +214,7 @@ assume fs:nothing ; Cho trình biên dịch biết không đưa giả định g�
             ; So sánh chuỗi từng byte một (ESI với EDI), giảm cx sau mỗi lần so sánh
             ; Lệnh này sẽ dừng khi tìm thấy 1 byte khác hoặc CX = 0  
             ; repe = repeat while equal - lặp lại khi các byte bằng nhau    
-            jz Found ; Nếu ZF = 1 nhảy đến FunctionFound
+            jz Found ; Nếu ZF = 1 nhảy đến Found
             inc eax ; Tăng bộ đếm hàm
             cmp eax, [ebp - 4h] ; So sánh với tổng số hàm
             jne findFunc ; Nếu chưa kiểm tra hết thì tiếp tục vòng lặp

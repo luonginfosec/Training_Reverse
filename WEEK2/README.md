@@ -139,7 +139,6 @@ assume fs:nothing ; Cho trình biên dịch biết không đưa giả định g�
     get_address proc ; Thủ tục để tìm động các hàm API Windows
         push ebp ; Lưu con trỏ cơ sở cũ
         mov ebp, esp ; Thiết lập khung ngăn xếp mới
-        sub esp, 14h ; Cấp phát 20 byte biến cục bộ trên ngăn xếp
         xor eax, eax ; Xoá thanh ghi EAX đặt lại thành 0
         mov [ebp - 4h], eax    ; [ebp-4] = Số lượng hàm xuất 
         mov [ebp - 8h], eax    ; [ebp-8] = Địa chỉ bảng địa chỉ hàm 
@@ -214,7 +213,7 @@ assume fs:nothing ; Cho trình biên dịch biết không đưa giả định g�
             ; So sánh chuỗi từng byte một (ESI với EDI), giảm cx sau mỗi lần so sánh
             ; Lệnh này sẽ dừng khi tìm thấy 1 byte khác hoặc CX = 0  
             ; repe = repeat while equal - lặp lại khi các byte bằng nhau    
-            jz Found ; Nếu ZF = 1 nhảy đến Found
+            jz Found ; Nếu ZF = 1 nhảy đến FunctionFound
             inc eax ; Tăng bộ đếm hàm
             cmp eax, [ebp - 4h] ; So sánh với tổng số hàm
             jne findFunc ; Nếu chưa kiểm tra hết thì tiếp tục vòng lặp
@@ -229,7 +228,7 @@ assume fs:nothing ; Cho trình biên dịch biết không đưa giả định g�
          
             mov eax, [edx + eax * 4] ; Lấy RVA của hàm từ bảng địa chỉ (mỗi phần tử là 4 bytes)
             add eax, ebx ; Tính địa chỉ thực tế
-        add esp, 14h  ; Giaỉ phóng 20 bytes biến cục bộ trên stack
+        mov esp,ebp  ; Giaỉ phóng 20 bytes biến cục bộ trên stack
         pop ebp ; Khôi phục con trỏ khung cơ sở cũ
         ret ; trả về với địa chỉ hàm trong eax
     get_address endp
@@ -246,7 +245,7 @@ assume fs:nothing ; Cho trình biên dịch biết không đưa giả định g�
                                    ; Bây giờ "GetStdHandleA" đã nằm trên ngăn xếp
         mov esi, esp               ; Trỏ ESI đến tên hàm trên ngăn xếp
         call get_address           ; Gọi thủ tục để tìm địa chỉ hàm
-        add esp, 10h               ; Dọn dẹp 16 byte trên ngăn xếp (xóa tên hàm)
+        mov esp,ebp              ; Dọn dẹp 16 byte trên ngăn xếp (xóa tên hàm)
         pop ebp                    ; Khôi phục con trỏ khung cơ sở cũ
         ret                        ; Trả về với địa chỉ hàm trong EAX
     GetStdHandle endp
@@ -274,7 +273,7 @@ assume fs:nothing ; Cho trình biên dịch biết không đưa giả định g�
                                    ; Bây giờ "WriteConsoleA" đã nằm trên ngăn xếp
         mov esi, esp               ; Trỏ ESI đến tên hàm trên ngăn xếp
         call get_address           ; Gọi thủ tục để tìm địa chỉ hàm
-        add esp, 10h               ; Dọn dẹp 16 byte trên ngăn xếp
+        mov esp,ebp              ; Dọn dẹp 16 byte trên ngăn xếp
         pop ebp                    ; Khôi phục con trỏ khung cơ sở cũ
         ret                        ; Trả về với địa chỉ hàm trong EAX
     WriteConsoleA endp
@@ -306,7 +305,7 @@ assume fs:nothing ; Cho trình biên dịch biết không đưa giả định g�
                                    ; Bây giờ "ExitProcess" đã nằm trên ngăn xếp
         mov esi, esp               ; Trỏ ESI đến tên hàm trên ngăn xếp
         call get_address           ; Gọi thủ tục để tìm địa chỉ hàm
-        add esp, 0Ch               ; Dọn dẹp 12 byte trên ngăn xếp
+        mov esp,ebp               ; Dọn dẹp 12 byte trên ngăn xếp
         pop ebp                    ; Khôi phục con trỏ khung cơ sở cũ
         ret                        ; Trả về với địa chỉ hàm trong EAX
     ExitProcessFunc endp

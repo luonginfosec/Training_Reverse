@@ -2,26 +2,6 @@
 
 ## Nội dung
 
-Debug Flags
-## 1. Using Win32 API
-- **1.1.** `IsDebuggerPresent()`
-- **1.2.** `CheckRemoteDebuggerPresent()`
-- **1.3.** `NtQueryInformationProcess()`
-    - **1.3.1.** `ProcessDebugPort`
-    - **1.3.2.** `ProcessDebugFlags`
-    - **1.3.3.** `ProcessDebugObjectHandle`
-- **1.4.** `RtlQueryProcessHeapInformation()`
-- **1.5.** `RtlQueryDebugInfomation()`
-- **1.6.** `NtQuerySystemInformation()`
-- Mitigations
-## 2. Manual checks
-- **2.1.** `PEB!BeingDebugged Flag`
-- **2.2.** `NtGlobalFlag`
-- **2.3.** `Heap Flags`
-- **2.4.** `Heap Protection`
-- **2.5.** `Check KUSER_SHARED_DATA structure`
-- Mitigations
-
 ## Debug Flags (Cờ gỡ lỗi)
 Trong phần này có khái niệm bảng hệ thống: 
 **System tables** (các bảng hệ thống) là các cấu trúc dữ liệu trong bộ nhớ do hệ điều hành quản lý, chứa thông tin về tiến trình, luồng, và trạng thái hệ thống.

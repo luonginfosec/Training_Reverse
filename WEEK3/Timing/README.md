@@ -66,6 +66,9 @@ int main() {
 ## 2. GetLocalTime()
 
 ```C
+#include <windows.h>
+#include <stdio.h>
+
 bool IsDebugged(DWORD64 qwNativeElapsed)
 {
     SYSTEMTIME stStart, stEnd;
@@ -73,7 +76,7 @@ bool IsDebugged(DWORD64 qwNativeElapsed)
     ULARGE_INTEGER uiStart, uiEnd;
 
     GetLocalTime(&stStart);
-    // ... some work
+    Sleep(1000);
     GetLocalTime(&stEnd);
 
     if (!SystemTimeToFileTime(&stStart, &ftStart))
@@ -81,13 +84,33 @@ bool IsDebugged(DWORD64 qwNativeElapsed)
     if (!SystemTimeToFileTime(&stEnd, &ftEnd))
         return false;
 
-    uiStart.LowPart  = ftStart.dwLowDateTime;
+    uiStart.LowPart = ftStart.dwLowDateTime;
     uiStart.HighPart = ftStart.dwHighDateTime;
-    uiEnd.LowPart  = ftEnd.dwLowDateTime;
+    uiEnd.LowPart = ftEnd.dwLowDateTime;
     uiEnd.HighPart = ftEnd.dwHighDateTime;
+
     return (uiEnd.QuadPart - uiStart.QuadPart) > qwNativeElapsed;
 }
+
+int main()
+{
+    DWORD64 qwNativeElapsed = 10000000;
+
+    if (IsDebugged(qwNativeElapsed))
+    {
+        printf("Debugger detected!\n");
+    }
+    else
+    {
+        printf("No debugger detected.\n");
+    }
+
+    return 0;
+}
+
 ```
+
+![alt text](./img/GetLocalTime().png)
 
 Hàm IsDebugged đo thời gian chạy của một đoạn mã ngắn. Nếu thời gian đo được lớn hơn giá trị giới hạn ```qwNativeElapsed```, thì có thể chương trình đang bị debug (vì debugger có thể làm chậm quá trình chạy).
 
@@ -117,6 +140,8 @@ bool IsDebugged(DWORD64 qwNativeElapsed)
     return (uiEnd.QuadPart - uiStart.QuadPart) > qwNativeElapsed;
 }
 ```
+![alt text](./img/GetSystemTime().png)
+
 
 ```GetSystemTime```: Trả về thời gian hiện tại theo giờ UTC (thời gian chuẩn toàn cầu), ổn định hơn và không bị ảnh hưởng bởi múi giờ.
 

@@ -237,3 +237,20 @@ bool IsDebugged()
 }
 ```
 
+## Mitigations
+
+Trong quá trình debug: 
+Cách tốt nhất để giảm thiểu tất cả các kỹ thuật liên quan đến bộ nhớ (bao gồm cả chống Step-Over) là:
+Xác định chính xác đoạn kiểm tra đó và sửa nó bằng cách ghi đè NOP, hoặc thay đổi giá trị trả về sao cho ứng dụng cho phép tiếp tục thực thi.
+
+Đối với phát triển công cụ chống anti-debug:
+
+Breakpoint phần mềm & Chống Step-Over:
+Không thể can thiệp vào các kiểm tra này vì chúng không cần sử dụng API và truy cập trực tiếp vào bộ nhớ.
+
+Memory Breakpoints:
+Nhìn chung, có thể theo dõi chuỗi các hàm được gọi để áp dụng loại kiểm tra này.
+
+Hardware Breakpoints:
+Hook hàm kernel32!GetThreadContext() và sửa đổi các thanh ghi debug.
+

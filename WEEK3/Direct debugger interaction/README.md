@@ -95,7 +95,7 @@ Kết quả là làm cho debugging trở nên bất khả thi.
 
 Khi đang debug, tốt nhất là bỏ qua các lệnh khả nghi (ví dụ: thay chúng bằng NOPs)
 
-Nếu bạn viết một giải pháp chống lại cơ chế chống debug (anti-anti-debug), tất cả các hàm sau đây đều có thể được hook:
+Nếu viết một giải pháp chống lại cơ chế chống debug (anti-anti-debug), tất cả các hàm sau đây đều có thể được hook:
 
 ```
 kernel32!DebugActiveProcess

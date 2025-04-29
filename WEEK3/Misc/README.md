@@ -224,3 +224,10 @@ Nếu hệ thống có gắn trình gỡ lỗi kernel, thì các hàm này sẽ 
 Tuy nhiên, ngay cả khi không có kernel debugger, đôi khi chúng cũng thành công do các hiệu ứng phụ từ trình gỡ lỗi ở user-mode (ví dụ như debugger bình thường bạn chạy trong Windows).
 
 Lưu ý: Các hàm này yêu cầu quyền quản trị viên (administrator privileges) để gọi.
+
+## Mitigations
+Trong khi debug:
+Nếu gặp các cơ chế kiểm tra chống debug hoặc chống theo dõi (anti-debug/anti-trace), hãy thay các lệnh đó bằng NOP để vô hiệu hóa chúng.
+
+
+

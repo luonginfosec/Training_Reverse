@@ -2,7 +2,7 @@
 
 File PE 32 bit quăng vào IDA
 
-![alt text](./img/25.png)
+![alt text](../img/25.png)
 
 
 Trong hàm main chúng ta thấy có 
@@ -62,13 +62,13 @@ _main endp
 Vậy thì khi không debug chương trình sẽ hoạt động ở hàm ```TopLevelExceptionFilter```
 Trong hàm này chúng ta không thể F5 được vấn đề có thể do chỗ kia, người ta cố tình chèn thêm byte rác vào để không F5 được
 
-![alt text](./img/26.png)
+![alt text](../img/26.png)
 
 Thử U để undefine rồi P để tạo lại function.
 
-![alt text](./img/27.png)
-![alt text](./img/28.png)
-![alt text](./img/29.png)
+![alt text](../img/27.png)
+![alt text](../img/28.png)
+![alt text](../img/29.png)
 
 Sau một hồi patch, rồi make fun rồi thu được mã giả như hình.
 
@@ -132,7 +132,7 @@ Vậy giá trị trẻ về đúng ở đây là v1 - v1 + 0xBEEF = 0xBEEF
 
 Quay lại hàm TopLevelExceptionFilter chúng ta thấy 17 kí tự đầu được xor với 1 kí tự 18 giữ nguyên và truyền pointer tại kí tự 19 vào sub_401460
 
-![alt text](./img/30.png)
+![alt text](../img/30.png)
 
 ```
 int __cdecl sub_401460(int a1)
@@ -146,11 +146,11 @@ int __cdecl sub_401460(int a1)
 }
 ```
 Tiếp nó lại truyền vào hàm loc_401330
-![alt text](./img/31.png)
+![alt text](../img/31.png)
 
 Tương tự ở hàm này chương trình lại cố trèn byte rác vào. Chúng ta lại U, C rồi patch rồi P lại để tìm lại mã giả thử. Sau một hồi thu được mã giả như hình.
 
-![alt text](./img/32.png)
+![alt text](../img/32.png)
 
 ```C
 _DWORD *__cdecl sub_401330(_DWORD *a1)
@@ -219,7 +219,7 @@ Windows cũng sẽ kiểm tra giá trị của thanh ghi EAX khi INT 2D được
 
 Như vậy luồng đúng của chúng ta khi gặp INT2 sẽ là 
 
-![alt text](./img/33.png)
+![alt text](../img/33.png)
 
 ```C
 mov     eax, [ebp+arg_0]        ; eax = địa chỉ mảng arr
@@ -252,7 +252,7 @@ Bỏ qua 64.
 
 Tiếp là từ 65 đến 69
 Gặp int3 nó sẽ nhảy sang except
-![alt text](./img/34.png)
+![alt text](../img/34.png)
 
 Được xor với  0x0C0FE1337h
 

@@ -67,7 +67,7 @@ Thử viết code giải mã bằng Python nhưng không ra được kết quả
 
 Phim tắt Ctrl + E để liệt kê các điểm entry point.
 
-![alt text](./img/16.png)
+![alt text](../img/16.png)
 
 Thấy có hàm TlsCallBack_0
 
@@ -108,14 +108,14 @@ Hàm IsDebuggerPresent() được sử dụng để kiểm tra xem chương trì
 Hàm [OpenProcess()](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess) được sử dụng để mở một handle tới một tiến trình đang chạy trên hệ thống. 
 Mở chương trình với full quyền PROCESS_ALL_ACCESS (0x1fffff) ghi 4 byte dữ liệu từ unk_403140 vào địa chỉ loc_4013A2 + 1. bằng WriteProcessMemory()
 
-![alt text](./img/17.png)
+![alt text](../img/17.png)
 
 Vậy thì khi không có bị debug runtime chương trình như bình thường thì nó sẽ sửa đổi opcode chỗ call encFun đang từ ```E8 D9 FD FF FF``` thành ```E8 C9 FC FF FF```.
 
 Bây giờ có 2 cách 1 là debug luôn ở chỗ TlsCallback_0 rồi chỉnh cờ rồi F9 đến main là xong. 
 2 là patch luôn rồi phân tích tĩnh ở đây e sẽ làm phương án 2 patch lại.
 
-![alt text](./img/18.png)
+![alt text](../img/18.png)
 Như vậy thì thay vì gọi encFun thì gọi sub_401070 truyền vào inp và key thành enc rồi mới đem đi so sánh.
 
 ```C

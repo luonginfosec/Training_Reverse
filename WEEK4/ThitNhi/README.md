@@ -132,7 +132,7 @@ void __cdecl __noreturn rc4_enc(int a1, int a2, _DWORD *key, int a4, int a5)
 
 Opcode (viết tắt của operation code) là mã lệnh đại diện cho một lệnh máy cụ thể trong ngôn ngữ máy hoặc hợp ngữ (assembly). Nó nói cho CPU biết phải thực hiện hành động gì như cộng, trừ, di chuyển dữ liệu, so sánh, nhảy, v.v.
 
-![alt text](./img/5.png)
+![alt text](../img/5.png)
 
 Giả sử trong kiến trúc x86, đoạn hợp ngữ: mov eax, 1 có thể được dịch ra mã máy là: B8 01 00 00 00
 
@@ -155,33 +155,33 @@ Nên thực chất hàm này có thể check chúng ta có đặt breakpoint hay
 
 Oke, clear đến tiếp phần sử dụng trong IDA để thấy lệnh INT 3 trực quan hơn trong IDA chúng ta tiến hành 1 số cài đặt.
 
-![alt text](./img/1.png)
-![alt text](./img/2.png)
+![alt text](../img/1.png)
+![alt text](../img/2.png)
 
 Để view opcode chúng ta cài đặt tiếp
 
-![alt text](./img/3.png)
+![alt text](../img/3.png)
 
 Thêm số lượng mà chúng ta mong muốn
 
-![alt text](./img/4.png)
+![alt text](../img/4.png)
 
 
 Ví dụ ta đặt break point ở đây và debug xem thử 
 
-![alt text](./img/6.png)
+![alt text](../img/6.png)
 
-![alt text](./img/7.png)
+![alt text](../img/7.png)
 
 Chúng ta đã thấy IDA chèn lệnh INT3 trước breakpoint chúng ta đặt để dừng chương trình lại.
 
 Điểm của check debug bằng INT3 là không ổn định không chính xác rất có thể trong code ban đầu của chúng ta có 0xCC
 
-![alt text](./img/8.png)
+![alt text](../img/8.png)
 
 Oke chúng ta quan tâm tiếp đến cái key
 
-![alt text](./img/9.png)
+![alt text](../img/9.png)
 
 Như vậy như đã nói từ trước thì có 0xCC trong code ban đầu vì thế dù chúng ta có đặt breakpoint hay không thì return value ở đây chính xác phải trả về 0x13
 
@@ -189,7 +189,7 @@ Tức là key của chúng ta là 0x13 ^ 0xDEADBEEF = key = 0xdeadbefc
 
 Đi tiếp vào hàm rc4_enc 
 
-![alt text](./img/10.png)
+![alt text](../img/10.png)
 
 Chúng ta thấy *key được cộng với 1 giá trị mà check0xcc trả về check thì trong hàm này không hề có 0xCC chứng tỏ giá trị đúng mà hàm này trả về khi gọi là 0x37.
 
@@ -287,22 +287,22 @@ Chúng ta thấy chúng ta đã có enc và key được gen ra nếu như chún
 
 Oke clear chúng ta tiến hành debug, nhìn ngay code biết len flag = 13 giả sử ban đầu em tiến hành nhập 13 chữ a trước.
 
-![alt text](./img/11.png)
+![alt text](../img/11.png)
 
 Oke input chúng ta nhập được lưu vào eax, tiến hành patch lại input của chúng ta bằng các byte trong encrypt theo đúng thú tự là được là ```7D 08 ED 47 E5 00 88 3A 7A 36 02 29 E4``` đúng 13 giá trị của enc.
 
 
 
-![alt text](./img/12.png)
+![alt text](../img/12.png)
 
 Patch lại.
 
 
 Sau đó chúng ta F9 cho chạy qua hết hàm rc4 này.
 
-![alt text](./img/14.png)
+![alt text](../img/14.png)
 
-![alt text](./img/15.png)
+![alt text](../img/15.png)
 
 
 

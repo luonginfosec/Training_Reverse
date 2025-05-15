@@ -31,9 +31,9 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 
 Ta thấy v6 = 15 do đó điều kiện v6 < 18 là luôn đúng. Chương trình sẽ ném ngoại lệ và đi vào catch.
 
-![alt text](./img/20.png)
+![alt text](../img/20.png)
 
-![alt text](./img/21.png)
+![alt text](../img/21.png)
 
 
 Thấy nó truyền chuỗi BKSEECCCC!!! là tham số đầu tiên rồi đến địa chỉ vùng nhớ input của chúng ta sau đó là số lượng byte cần sử lý.
@@ -42,13 +42,13 @@ Tức là ở đây chương trình thực hiện việc xor input của chúng 
 
 Ta thấy chương trình nạp địa chỉ loc_4F1AD5 vào eax nhưng sau đó không có gì mà lại nhảy tiếp đến 1 vòng lặp vô hạn.
 
-![alt text](./img/22.png)
+![alt text](../img/22.png)
 
 Thử nop thử đến thì thấy graph được gen ra gọi đến loc_4F1AD5 nhưng bị dối quá nop để dễ nhìn hơn. Tóm lại có lẽ logic chương trình được sử lý tiếp ở đó.
 
-![alt text](./img/23.png)
+![alt text](../img/23.png)
 
-![alt text](./img/24.png)
+![alt text](../img/24.png)
 
 Oke clear việc của chúng ta bây giờ là extract hết đống enc rồi xor lại thử thôi.
 

@@ -548,6 +548,7 @@ Check các cửa sổ không có thì mới xor giá trị đúng sẽ là
 
 ### Block 3
 
+```
 int __stdcall checkHardWareBreakpoint(_DWORD *a1)
 {
   HANDLE hThread; // [esp+10h] [ebp-2D4h]
@@ -563,6 +564,7 @@ int __stdcall checkHardWareBreakpoint(_DWORD *a1)
   *a1 ^= 0x68617264u;
   return 1;
 }
+```
 
 Tất cả mấy cái cờ kia phải bằng 1 thì mới chạy qua được. Key xor đúng 0x68617264
 

@@ -170,7 +170,7 @@ Focus vào mấy cái hàm kia.
 ![alt text](../img/47.png)
 
 
-## Block 1 
+## Block 1 : NtGlobalFlag
 
 ![alt text](../img/48.png) : NtGlobalFlag
 
@@ -180,9 +180,9 @@ Gía trị của thằng dl đúng ở đây là 0.
 
 Ta thấy hàm gen_const nhận vào 3 tham số tương ứng rồi nó được xor với _input ra cipher oke chúng ta chỉ cần tìm lại v6 là ngon.
 
-## Block 2
+## Block 2 : Flags
 
-![alt text](../img/49.png) : Flags
+![alt text](../img/49.png) 
 
 Heap Flags chứa hai cờ được khởi tạo cùng với NtGlobalFlag: Flags và ForceFlags.
 Ở đây kiểm tra Flags với offset 0xC

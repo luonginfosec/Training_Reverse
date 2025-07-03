@@ -134,7 +134,7 @@ Chọn crc32 và bấm ok thử.
 Ta thấy sau khi chạy xong các hàm có mã hash đã có comment bên cạnh tên hàm Window API đó.
 
 
-#### Sử dụng hashdb
+### Sử dụng hashdb
 
 
 ![alt text](./img/image10.png)

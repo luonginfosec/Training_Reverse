@@ -68,7 +68,7 @@ Hàm này nhận vào 2 tham số là base address và giá trị hash.
 
 v2 = (_DWORD *)(a1 + *(_DWORD *)(*(_DWORD *)(a1 + 60) + a1 + 120));
 
-Đây là
+Đây là IMAGE_EXPORT_DIRECTORY
 
 ```
 #[repr(C)]

@@ -175,3 +175,141 @@ Sử dụng công cụ SQLite để view thử file db trong shellcode_hash_sear
 Thấy được cấu trúc db, và các bảng các mục 
 ![alt text](./img/image18.png)
 Hoàn toàn có thể thêm và bổ sung vào hash mà chúng ta muốn.
+
+## 6. Tiến hành viết code bổ sung hash vào trong db
+
+DB gồm 3 bảng hash_types, source_libs, symbol_hashes nếu chúng ta muốn bổ sung có thể tự các thông tin trong bảng và cột tùy ý để custom.
+
+Ở đây e thực hiện việc tính hash mới rồi sau đó thêm tiếp tục vào symbol_hashes của db.
+
+```Python
+import sqlite3
+db_path = "sc_hashes.db"
+table = "symbol_hashes"
+NEW_HASH_TYPE = 38  # hash_type mới để phân biệt custom_hash thêm vào
+
+with sqlite3.connect(db_path) as conn:
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    # Truy vấn các bản ghi gốc có hash_type = 38
+    cur.execute(f'''
+        SELECT symbol_name, hash_val, lib_key
+        FROM "{table}"
+        WHERE hash_type = 38;
+    ''')
+    rows = cur.fetchall()
+
+    if not rows:
+        print("(Không có bản ghi hash_type = 38)")
+    else:
+        print("symbol_name\tcustom_hash")
+
+        for r in rows:
+            original_name = r["symbol_name"]
+            hash_val = r["hash_val"]
+            lib_key = r["lib_key"]
+
+            # Tính custom_hash
+            custom_hash = (-hash_val) % 0xFFFFFFFF + 1
+            print(f"{original_name}\t{custom_hash}")
+
+            # Thêm vào bảng
+            cur.execute(f'''
+                INSERT INTO {table} (hash_val, hash_type, lib_key, symbol_name)
+                VALUES (?, ?, ?, ?)
+            ''', (custom_hash, NEW_HASH_TYPE, lib_key, f"{original_name}"))
+
+        conn.commit()
+        print(f"Đã thêm {len(rows)} bản ghi custom_hash mới với hash_type = {NEW_HASH_TYPE}")
+```
+
+Kết quả sau khi thêm 
+
+![alt text](./img/image19.png)
+Chúng ta đã bổ sung thành công vào trong db, tiến hành chạy lại với case 6 mà chúng ta chưa tìm được hàm.
+
+![alt text](./img/image20.png)
+
+Khi chạy đã thu được hàm tương ứng với hash là user32.dll!BlockInput.
+
+## 7. Sử dụng với AppCall
+
+
+```Python
+import idaapi
+import ida_ida
+import idautils
+import idc
+import ida_name
+
+def is_mov_reg_imm(ea, reg):
+    return idc.print_insn_mnem(ea) == "mov" and idc.print_operand(ea, 0) == reg and idc.get_operand_type(ea, 1) == idc.o_imm
+
+def get_imm_val(ea):
+    return idc.get_operand_value(ea, 1)
+
+def is_call_to(ea, target_name):
+    return idc.print_insn_mnem(ea) == "call" and idc.print_operand(ea, 0) == target_name
+
+def find_pairs():
+    start = ida_ida.inf_get_min_ea()
+    end = ida_ida.inf_get_max_ea()
+
+    pairs = []
+
+    ea = start
+    while ea < end:
+        if is_mov_reg_imm(ea, "ecx"):
+            dll_res = get_imm_val(ea)
+            next_ea = idc.next_head(ea, end)
+
+            if is_call_to(next_ea, "sub_EB1DF0"):
+                next_ea2 = idc.next_head(next_ea, end)
+                if is_mov_reg_imm(next_ea2, "edx"):
+                    func_res = get_imm_val(next_ea2)
+
+                    next_ea3 = idc.next_head(next_ea2, end)
+                    next_ea4 = idc.next_head(next_ea3, end)
+                    if (
+                        idc.print_insn_mnem(next_ea3) == "mov"
+                        and idc.print_operand(next_ea3, 0) == "ecx"
+                        and idc.print_operand(next_ea3, 1) == "eax"
+                        and is_call_to(next_ea4, "sub_EB1F10")
+                    ):
+                        pairs.append({
+                            "dll_res": dll_res,
+                            "func_res": func_res,
+                            "ea_sub_eb1f10": next_ea4
+                        })
+        ea = idc.next_head(ea, end)
+
+    return pairs
+
+def resolve_and_comment():
+    pairs = find_pairs()
+    print(f"[+] Found {len(pairs)} valid call sequences.")
+
+    for pair in pairs:
+        dll_res = pair["dll_res"]
+        func_res = pair["func_res"]
+        ea_call = pair["ea_sub_eb1f10"]
+        try:
+            r = idaapi.Appcall.sub_EB1DF0(dll_res)
+            addr = r.__at__
+            resolved = idaapi.Appcall.sub_EB1F10(addr, func_res)
+            func_name = ida_name.get_name(resolved)
+            msg = f"{func_name} @ {hex(resolved)}"
+            print(f"0x{ea_call:X}: {msg}")
+
+            # Gắn comment tại dòng call sub_EB1F10
+            idc.set_cmt(ea_call, msg, 0)  # 0 = comment bên phải (inline)
+        except Exception as e:
+            print(f"0x{ea_call:X}: ❌ Failed to resolve ({hex(dll_res)}, {hex(func_res)}): {e}")
+
+resolve_and_comment()
+```
+
+![alt text](./img/image21.png)
+
+Thu được kết quả như hình.

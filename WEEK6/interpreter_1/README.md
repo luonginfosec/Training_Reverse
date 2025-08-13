@@ -236,3 +236,4 @@ Trung tố 3 + ((2*5) - 4) + 7 * (6/3)
 Input thỏa mãn là ```3 + ((2*5) - 4) + 7 * (6/3)```
 
 
+![alt text](../img/image28.png)

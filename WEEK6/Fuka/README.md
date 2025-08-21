@@ -107,6 +107,8 @@ equation2 = input0 * const3_int + input1 * const4_int + input2 * const5_int == r
 equation3 = input0 * const6_int - input1 * const7_int - input2 * const8_int == -result2_int
 ```
 
+## Khai thác và tìm flag
+
 Tiến hành sử dụng z3 và viết code solve thử 
 
 ```Python
@@ -362,5 +364,6 @@ if solver.check() == sat:
     print(f"{long_to_bytes(model[input2].as_long()).decode()}",end="")
 else:
     print("NO NO")
-ASCIS{Cpp_1s_34SY_bUt_(TT_TT)}
 ```
+
+```Flag: ASCIS{Cpp_1s_34SY_bUt_(TT_TT)}```

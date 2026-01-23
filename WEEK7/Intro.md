@@ -20,11 +20,35 @@ Ví dụ:
 - Module A tiêm vào explorer.exe
 - Module B tiêm vào chrome.exe
 - Module C tiêm vào svhost.exe
-Các module này nói chuyện qua named pines hoặc IPC khác để phối hợp.
+Các module này nói chuyện qua named pines hoặc phối hợp.
 
 Ví dụ:
 Tiến trình A ghi dữ liệu vào ```\\.\pipe\myPipe``` tiến trình B đọc từ ```\\.\pipe\myPipe```
 
 Sau khi đã tìm hiểu sơ sơ như vậy chúng ta tiếp tục đi sâu vào nghiên cứu từng phần.
 
-[Process_Injection_Dynamic_link_Library_Injection](Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 1. DLL Injection](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 2. Portable Executable Injection](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 3. Thread Execution Hijacking](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 4. Asynchronous Procedure Call](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 5. Thread Local Storage](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 6. Ptrace System Calls](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 7. Proc Memory](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 8. Extra Window Memory Injection](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 9. Process Hollowing](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 10. Process Doppelgänging](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 11. VDSO Hijacking](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+
+## [[+] 12. ListPlanting](./Techniques/[+]%201.%20DLL%20injection.md/Process_Injection_Dynamic_link_Library_Injection.md)
+

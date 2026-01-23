@@ -1,0 +1,16 @@
+# Visual Studio
+.vs/
+**/.vs/
+
+# VS C++ cache
+*.ipch
+*.VC.db
+*.opendb
+
+# Build outputs
+[Bb]in/
+[Oo]bj/
+x64/
+x86/
+Debug/
+Release/

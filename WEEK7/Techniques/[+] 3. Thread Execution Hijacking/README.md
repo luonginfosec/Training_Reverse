@@ -53,7 +53,7 @@ Sử dụng câu lệnh ```msfvenom -p windows/x64/messagebox TEXT="Hello" TITLE
 
 
 ## Video DEMO
-<video controls src="Img/Demo.mp4" title="Demo"></video>
+<video src="Img/Demo.mp4" controls width="1920"></video>
 
 <details> 
  <summary>Xem chi tiết mã nguồn</summary>

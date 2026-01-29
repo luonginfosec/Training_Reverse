@@ -52,8 +52,8 @@ Sử dụng câu lệnh ```msfvenom -p windows/x64/messagebox TEXT="Hello" TITLE
 ![alt text](Img/8.png)
 
 
-## Video DEMO
-<video src="Img/Demo.mp4" controls width="1920"></video>
+## Video Demo
+[Xem video demo](https://youtu.be/pxQGhwrQnmk)
 
 <details> 
  <summary>Xem chi tiết mã nguồn</summary>

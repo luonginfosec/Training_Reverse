@@ -2,7 +2,7 @@
 
 # Bối cảnh ban đầu
 
-Chúng ta sẽ tiếp tục triển khai các kĩ thuật Process Injection, tiếp đến là các kĩ thuật liên quan đến ```APC Queue Injection```.  Và việc việc APC này là việc một hàm sẽ được thực thi một cách bất đồng bộ trong context của một luồng cụ thể. 
+Chúng ta sẽ tiếp tục triển khai các kĩ thuật Process Injection, tiếp đến là các kĩ thuật liên quan đến ```APC Queue Injection```.  Và việc APC này là việc một hàm sẽ được thực thi một cách bất đồng bộ trong context của một luồng cụ thể. 
 
 Khi một APC được xếp vào hàng đợi của một luồng, hệ thống sẽ tạo ra một ngắt phần mềm (software interrupt). Lần tiếp theo khi luồng được chạy nó sẽ chạy hàm APC. APC do hệ thống tạo ra gọi là ```kernel-mode APC```. APC do người dùng tạo ra gọi là ```user-mode APC```. Một luồng (thread) phải ở trạng thái alertable thì mới chạy được ở ```user-mode APC.```
 
@@ -22,7 +22,7 @@ Nếu chèn tác vụ vào hàng đợi APC của một thread trước khi nó 
 
 # Triển khai kĩ thuật Early Bird APC Injection
 
-Kĩ thuật này sẽ chèn các tác vụ độc hại vào thread có sẵn trên hệ thống, kỹ thuật này sẽ tạo ra một target process ở trạng thái ngưng hoạt động (suspended). Rồi sau đó nó thực hiện việc chèn các tác vụ độc hại vào trong hàng đợi APC của main thread trong target process. Cuối cùng khi đó main thread sẽ thực thi các tác vụ độc hại có sẵn trong hàng đợi APC thay vì thực hiện chức năng cơ bản của nó.
+Kĩ thuật này sẽ chèn các tác vụ độc hại vào thread của process mới tạo, kỹ thuật này sẽ tạo ra một target process ở trạng thái ngưng hoạt động (suspended). Rồi sau đó nó thực hiện việc chèn các tác vụ độc hại vào trong hàng đợi APC của main thread trong target process. Cuối cùng khi đó main thread sẽ thực thi các tác vụ độc hại có sẵn trong hàng đợi APC thay vì thực hiện chức năng cơ bản của nó.
 
 ## Tạo shellcode x64 với msfvenom
 

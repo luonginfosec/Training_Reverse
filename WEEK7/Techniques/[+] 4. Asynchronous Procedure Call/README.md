@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
 ```
 # Triển khai kĩ thuật APC Injection thông qua process có sẵn
 
-Việc này thay vì việc sử dụng cách tạo 1 process mới ở chế độ treo chúng ta sẽ tìm cách inject vào các tiến trình đã tồn tại sẵn trên máy. Phần target process chúng ta sẽ quan tâm đến những process có nhiều thread đang hoạt động khi đó sẽ dễ gặp 1 thread dơi vào chế độ nghỉ alertable, tác vụ độc hại của chúng ta sẽ dễ kích hoạt hơn.
+Việc này thay vì việc sử dụng cách tạo 1 process mới ở chế độ treo chúng ta sẽ tìm cách inject vào các tiến trình đã tồn tại sẵn trên máy. Phần target process chúng ta sẽ quan tâm đến những process có nhiều thread đang hoạt động khi đó sẽ dễ gặp 1 thread rơi vào chế độ nghỉ alertable, tác vụ độc hại của chúng ta sẽ dễ kích hoạt hơn.
 
 ## Tạo shellcode x64 với msfvenom
 
@@ -362,3 +362,18 @@ int main(int agrc, char* argv[]) {
 ## Demo
 
 ![alt text](img/13.png)
+
+## Tài liệu tham khảo
+
+https://learn.microsoft.com/en-us/windows/win32/sync/asynchronous-procedure-calls
+http://undocumented.ntinternals.net/
+
+https://cocomelonc.github.io/tutorial/2021/11/11/malware-injection-3.html
+
+https://cocomelonc.github.io/tutorial/2021/11/22/malware-injection-5.html
+
+https://cocomelonc.github.io/tutorial/2021/11/20/malware-injection-4.html
+
+https://www.ired.team/offensive-security/code-injection-process-injection/apc-queue-code-injection
+
+https://hackmd.io/_ef-KF-9RY6Hqrrlr5bTZw#C%C3%A1c-b%C6%B0%E1%BB%9Bc-th%E1%BB%B1c-hi%E1%BB%87n-APC-Queue-Injection-th%C3%B4ng-qua-NtTestAlert

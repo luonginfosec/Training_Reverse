@@ -288,3 +288,17 @@ Chọn remove để gỡ mã độc.
 ![alt text](img/39.png)
 
 Gỡ thành công.
+
+## Tài liệu tham khảo 
+
+[+] https://github.com/nhat3eo22/SEO_Malware
+
+[+] https://github.com/microsoft/IIS.Common
+
+[+] https://blog.viettelcybersecurity.com/phat-hien-chien-dich-tan-cong-moi-cua-nhom-apt-vao-cac-may-chu-iis-su-dung-ma-doc-iis-raid/
+
+[+] https://sec.vnpt.vn/2024/05/part-1-hacker-thuc-hien-black-hat-seo-cac-trang-web-bat-hop-phap-bang-tan-cong-redirect-nhu-the-nao/
+
+[+] https://sec.vnpt.vn/2024/09/part-2-hacker-thuc-hien-black-hat-seo-cac-trang-web-bat-hop-phap-bang-tan-cong-redirect-nhu-the-nao
+
+[+] https://whitehat.vn/threads/ma-doc-iis-hung-thu-tan-cong-vao-cac-trang-web-co-quan-nha-nuoc-gan-day.16474/

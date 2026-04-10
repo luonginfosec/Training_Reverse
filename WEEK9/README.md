@@ -273,9 +273,11 @@ f_net_enum: dò quét các tài nguyên mạng trong mạng LAN, các ổ đĩa,
 
 f_Process: thực hiện hành vi liệt kê các tiến trình đang chạy, lấy thông tin về đường dẫn cũng như quyền hạn thực thi của chúng.
 
-f_end_process_thread: dừng một tiến trình hoặc luồng cụ thể đang chạy trên máy nạn nhân.
+f_end_process_thread: dừng, tạm dừng hoặc tiếp tục một tiến trình hoặc luồng cụ thể đang chạy trên máy nạn nhân.
 
 f_ProcessToken: thực hiện đánh cắp token của tiến trình nhằm mục đích leo thang đặc quyền.
+
+f_w_CreateThread: tạo luồng thực thi mới trên tiến trình hiện tại hoặc tiến trình đích
 
 f_f_writememory: thực hiện ghi dữ liệu vào 1 tiến trình khác (process injection)
 
